@@ -1,0 +1,38 @@
+{
+    "skoleruta": {
+        "fridager": {
+            "14-11-23": "Planlegginsgdag",
+            "22-12-23": "Juleferie",
+            "01-01-24": "Juleferie",
+            "15-02-24": "Planleggingsdag",
+            "01-03-24": "Påskeferie",
+            "25-04-24": "Planleggingsdag",
+            "26-04-24": "Planleggingsdag",
+            "01-05-24": "Offisiell fridag",
+            "09-05-24": "Kr. himmelfartsdag",
+            "10-05-24": "Fridag",
+            "17-05-24": "Grunnlovsdagen",
+            "20-05-24": "2. pinsedag",
+            "21-06-24": "Sommerferie"
+        },
+        "ferier": {
+            "41-2023": "Høstferie",
+            "52-2023": "Juleferie",
+            "9-2024": "Vinterferie",
+            "13-2024": "Påskeferie"
+        },
+        "siste skoledag": "20-06-24"
+    },
+    "timeplaner": {
+        "1TIFA": [
+            ["2:x", "2:n:345:Kristine", "2:e:323:Gjermund", "2:ks:122:Hans", "2:pt:209:Vettivel"],
+            ["1:-", "1:-", "1:-", "1:-", "1:-"],
+            ["2:YFF", "2:k:Gymsalen:Didrik", "1:m:330:Didrik", "1:ks:122:Hans", "2:pt:209:Vettivel"],
+            ["1:-", "1:-", "1:ks:331:Vettivel", "1:e:331:Gjermund", "1:-"],
+            ["2:YFF", "2:pk:123:Hans Christian", "1:ks:331:Vettivel", "2:e:331:Gjermund", "1:pt:219:Vettivel"],
+            ["1:-", "1:-", "1:x", "1:-", "1:pk:219:Vettivel"],
+            ["2:YFF", "2:pt:215:Vettivel", "2:x", "2:m:330:Didrik", "2:pk:219:Vettivel"],
+            ["1:-", "1:-", "1:-", "1:-", "1:-"]
+        ]
+    }
+}
