@@ -1,18 +1,17 @@
 import locale
-
-from docx import Document
-from docx.table import _Cell, Table
-from docx.shared import RGBColor
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.section import WD_ORIENT
-from docx.shared import Pt, Cm
-from docx.text.run import Run
-
 from datetime import datetime
 
+from docx import Document
+from docx.enum.section import WD_ORIENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Cm, Pt, RGBColor
+from docx.table import Table, _Cell
+from docx.text.run import Run
+
 import settings
+
 """
 time: "kode:fag:rom:lærer", ved fri: "kode:beskrivelse", eks: "3:Grunnlovsdagen", 
     koder:
@@ -179,7 +178,7 @@ def set_margins(doc:Document, left:Cm, right:Cm):
     section.right_margin = right
     section.left_margin = left
 
-def get_date_string(date:datetime, language:str="Norwegian"):
+def get_date_string(date:datetime, language:str="no_NO"):
     """
     Converts datetime object to a date string formatted for the schedule
     :param date: datetime object
@@ -222,19 +221,27 @@ def insert_periods(table:Table, day:int, periods):
         period_ls = period.split(":")
 
         if period_ls[0] == "2":
-            cell = table.cell(y, day).merge(table.cell(y+1, day))
+            try:
+                cell = table.cell(y, day).merge(table.cell(y+1, day))
+            except IndexError:
+                pass
         else:
             cell = table.cell(y, day)
         
         if period_ls[1] == "x" or period_ls[1] == "-":
             continue
         if len(period_ls) > 2:
-            text = f'{settings.SUBJECT_CODES[period_ls[1]]}\n{period_ls[2]}\n{period_ls[3]}'
+            text_str = ""
+            for item in period_ls[2:]:
+                text_str += "\n" + item
+            code = f'{settings.SUBJECT_CODES[period_ls[1]]}'
+            text = code + text_str
         else:
             text = f'{settings.SUBJECT_CODES[period_ls[1]]}'
+            code = text
         text_run = insert_text_in_cell(cell, text, WD_ALIGN_PARAGRAPH.CENTER, size=9)
-        shade_cell(cell, settings.COLORS[text]["background"])
-        set_text_color(text_run, settings.COLORS[text]["text"])
+        shade_cell(cell, settings.COLORS[code]["background"])
+        set_text_color(text_run, settings.COLORS[code]["text"])
         set_vertical_alignment(cell)
 
         
@@ -249,9 +256,12 @@ def parse_timetable(timetable:list):
     """
     
     days = []
+    has_a_day_off = False
+
     for i, subj in enumerate(timetable[0]):
         if subj.split(":")[0] == "3":
             days.append(subj)
+            has_a_day_off = True
             continue
         else:
             day = []
@@ -259,7 +269,8 @@ def parse_timetable(timetable:list):
                 day.append(timetable[j][i])
 
             days.append(day)
-    
+    if has_a_day_off:
+        print(days)
     return days
 
 def create_schedule(timetable:list, dates:datetime, path:str):
@@ -278,11 +289,10 @@ def create_schedule(timetable:list, dates:datetime, path:str):
     set_margins(document, settings.LEFT_MARGIN, settings.RIGHT_MARGIN)
     table = create_base_table(document)
 
-    days = parse_timetable(timetable)
+    days = timetable
     for i, day in enumerate(days):
         insert_periods(table, i+1, day)
     # Insert dates
     insert_dates(table, dates)
     document.save(path)
-
 

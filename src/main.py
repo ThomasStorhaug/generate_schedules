@@ -1,8 +1,9 @@
-from datetime import datetime, date
+import os
+from datetime import date, datetime
 from json import load
 
-import word_functions
 import settings
+import word_functions
 
 #week = 34
 #monday = date.fromisocalendar(2023, week, 1)
@@ -33,7 +34,7 @@ def create_date_range(week:str)->list:
     year = int(week.split("-")[1])
     week_number = int(week.split("-")[0])
     d_range = []
-    for i in range(1,5):
+    for i in range(1,6):
         d_range.append(datetime.fromisocalendar(year, week_number, i))
     
     return d_range
@@ -58,32 +59,41 @@ def import_data(path:str)->dict:
     return json_data
 
 def create_schedule(week, class_name, data):
-    data = import_data("src/data.json")
     schedule = data["timeplaner"][class_name]
     holiday_names = data["skoleruta"]["fridager"]
     holidays = [datetime.strptime(x, "%d-%m-%y") for x in holiday_names]
 
     date_range = create_date_range(week)
     new_schedule = []
+
+    days = []
+    for d in range(5):
+        days.append([schedule[x][d] for x in range(8)])
+
     for i, date in enumerate(date_range):
         if date in holidays:
-            new_schedule.append(schedule[0][:i] + [f"3:{holiday_names[date.strftime('%d-%m-%y')]}" + new_schedule[]])
-            for row in schedule:
-                new_row = row[:i] + [f"3:{holiday_names[date.strftime('%d-%m-%y')]}"] + row[i + 1:]
-                new_schedule.append(new_row)
-    if len(new_schedule) < 1:
-        new_schedule = schedule
+            days = days[:i] + [f'3:{holiday_names[date.strftime("%d-%m-%y")]}'] + days[i + 1:]
 
-    return new_schedule
+    return days
 
 def main():
     data = import_data("src/data.json")
     weeks_23 = [f'{week}-2023' for week in range(int(settings.WEEKS[:2]), 53) if not is_week_off(f'{week}-2023', data)]
     weeks_24 = [f'{week}-2024' for week in range(1, int(settings.WEEKS.split(":")[1][:2])) if not is_week_off(f'{week}-2024', data)]
+    basedir = "ukeplaner"
+    if not os.path.exists(basedir):
+        os.makedirs(basedir)
+    
+    for class_ in settings.CLASSES:
+        print(f"Creating {class_} files")
+        path = os.path.join(basedir, class_)
+        if not os.path.exists(path):
+            os.makedirs(path)
 
-    for week in weeks_23 + weeks_24:
-        schedule = create_schedule(week, "1TIFA", data)
-        print(schedule)
+        for week in weeks_23 + weeks_24:
+            schedule = create_schedule(week, "1TIFA", data)
+            date_range = create_date_range(week)
+            word_functions.create_schedule(schedule, date_range, f'{path}/{class_}_uke_{week}.docx')
 
 
 if __name__ == "__main__":
