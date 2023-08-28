@@ -4,7 +4,7 @@ from datetime import datetime
 from docx import Document
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml import OxmlElement
+from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 from docx.table import Table, _Cell
@@ -43,7 +43,7 @@ def shade_cell(cell: _Cell, color_str: str):
     Word XML magic
     :param cell: the _Cell object that will get shaded
     :param color_str: a string representation of the rgb color, can be with or without #
-    """
+    
     cell_element = cell._tc
 
     shading_elm = OxmlElement("w:shd")
@@ -51,7 +51,13 @@ def shade_cell(cell: _Cell, color_str: str):
     shading_elm.set(qn("w:fill"), color_str)
 
     cell_element.get_or_add_tcPr().append(shading_elm)
+    """
+    if color_str[0] =="#":
+        color_str = color_str[1:]
 
+    shading_elm = parse_xml(r'<w:shd xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:fill="{}"/>'.format(color_str))
+    cell._tc.get_or_add_tcPr().append(shading_elm)
+    
 def set_vertical_alignment(cell: _Cell, align:str="center"):
     """
     Sets the vertical alignment of a cell, default is center aligned
@@ -167,7 +173,7 @@ def set_to_landscape(doc:Document):
     section.page_width = new_width
     section.page_height = new_height
 
-def set_margins(doc:Document, left:Cm, right:Cm):
+def set_margins(doc:Document, left:Cm, right:Cm, top:Cm, bottom:Cm):
     """
     Sets the margins of the documents first section
     :param doc: the Document object
@@ -177,6 +183,8 @@ def set_margins(doc:Document, left:Cm, right:Cm):
     section = doc.sections[0]
     section.right_margin = right
     section.left_margin = left
+    section.top_margin = top
+    section.bottom_margin = bottom
 
 def get_date_string(date:datetime, language:str="no_NO"):
     """
@@ -286,7 +294,7 @@ def create_schedule(timetable:list, dates:datetime, path:str):
     """
     document = Document()
     set_to_landscape(document)
-    set_margins(document, settings.LEFT_MARGIN, settings.RIGHT_MARGIN)
+    set_margins(document, settings.LEFT_MARGIN, settings.RIGHT_MARGIN, settings.TOP_MARGIN, settings.BOTTOM_MARGIN)
     table = create_base_table(document)
 
     days = timetable

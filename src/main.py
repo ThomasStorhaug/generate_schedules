@@ -91,7 +91,7 @@ def main():
             os.makedirs(path)
 
         for week in weeks_23 + weeks_24:
-            schedule = create_schedule(week, "1TIFA", data)
+            schedule = create_schedule(week, class_, data)
             date_range = create_date_range(week)
             word_functions.create_schedule(schedule, date_range, f'{path}/{class_}_uke_{week}.docx')
 

@@ -53,7 +53,9 @@ CLASS_CELL_HEIGHT = Cm(1.5)
 
 LEFT_MARGIN = Cm(0.5)
 RIGHT_MARGIN = Cm(0.5)
+TOP_MARGIN = Cm(0.5)
+BOTTOM_MARGIN = Cm(0.5)
 
 FONT_FAMILY = "Calibri"
 
-TOP_ROW_TEXT = "Viktig info:\n"
+TOP_ROW_TEXT = "Viktig info:"
