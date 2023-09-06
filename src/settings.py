@@ -4,17 +4,25 @@ from docx.shared import Cm
 
 WEEKS = "35-2023:25-2024"
 
-CLASSES = ["1TIFA", "1TIFB", "1TIFC", "1TIFD", "1TIFE", "1TIFF", "1TIFG"]
+CLASSES = [
+    "1TIFA", 
+    "1TIFB", 
+    "1TIFC", 
+    "1TIFD", 
+    "1TIFE", 
+    "1TIFF", 
+    "1TIFG",
+    ] 
 
 COLORS = {
     "YFF" : {"text": "#ffffff", "background": "#8b4049"},
     "Naturfag" : {"text": "#000000", "background": "#c9cca1"},
     "Kroppsøving" : {"text": "#ffffff", "background": "#caa05a"},
-    "Produksjon og kvalitetsstyring" : {"text": "#ffffff", "background": "#ae6a47"},
+    "Produktivitet og kvalitetsstyring" : {"text": "#ffffff", "background": "#ae6a47"},
     "Engelsk" : {"text": "#ffffff", "background": "#543344"},
     "Matematikk" : {"text": "#ffffff", "background": "#515262"},
     "Konstruksjon og styringsteknikk" : {"text": "#ffffff", "background": "#63787d"},
-    "Produktivitet og tjenester" : {"text": "#ffffff", "background": "#8ea091"},
+    "Produksjon og tjenester" : {"text": "#ffffff", "background": "#8ea091"},
     "accent": {"text": "#ffffff", "background": "#E2EFD9"},
     "fri": {"text": "#000000", "background": "#D9D9D9"}
 }
@@ -25,9 +33,9 @@ SUBJECT_CODES = {
     "m": "Matematikk",
     "e": "Engelsk",
     "k": "Kroppsøving",
-    "pk": "Produksjon og kvalitetsstyring",
+    "pk": "Produktivitet og kvalitetsstyring",
     "ks": "Konstruksjon og styringsteknikk",
-    "pt": "Produktivitet og tjenester"
+    "pt": "Produksjon og tjenester"
 }
 
 CLASS_START = {
